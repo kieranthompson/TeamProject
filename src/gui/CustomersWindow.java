@@ -1,4 +1,4 @@
-﻿package gui;
+package gui;
 
 import core.Customer;
 import core.Email;
@@ -136,10 +136,6 @@ public class CustomersWindow extends JFrame {
 				String currentCustomerEmail = emailField.getText();
 				StringBuilder receiptContent = new StringBuilder();
 
-//				for(int i = 0; i < GeneralWindow.model.getRowCount() -1; i ++ ) {
-//					receiptContent.append(String.valueOf(GeneralWindow.model.getValueAt(i, 0)) + "\t" + String.valueOf(GeneralWindow.model.getValueAt(i, 1)) + "\n");
-//					System.out.println(receiptContent);
-//				}
 
 				try {
 
@@ -153,7 +149,7 @@ public class CustomersWindow extends JFrame {
 					ps.executeUpdate();
 
 					GeneralWindow.model.setRowCount(0);
-					GeneralWindow.totalLabel.setText("Total: €");
+					GeneralWindow.totalLabel.setText("Total: ?");
 					GeneralWindow.totalPrice = 0;
 
 					Email email = new Email();

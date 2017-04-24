@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Calendar;
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -167,6 +168,8 @@ public class GeneralWindow extends JFrame {
 		currentEmployee.setBounds(10, 600, 300, 25);
 		getContentPane().add(currentEmployee);
 
+        productCodeField.requestFocusInWindow();
+
 		checkStock();
 		currentDate();
 
@@ -217,24 +220,16 @@ public class GeneralWindow extends JFrame {
                         row[1] = rs.getDouble("price");
 						receiptDetails += "\n " + rs.getInt("stockID") + "\t" + row[0].toString() + "\t " + row[1].toString();
                         model.addRow(row);
+
+
+						totalPrice = totalPrice + (double) model.getValueAt(table.getRowCount() - 1, 1);
+                        DecimalFormat df = new DecimalFormat("#.##");
+                        totalPrice = Double.valueOf(df.format(totalPrice));
+						System.out.println("price: " + totalPrice);
+						totalLabel.setText("total: " + totalPrice);
 					}
 					else
 						JOptionPane.showMessageDialog(null, "item doesn't exist");
-//                    if(!rs.next()) {
-//                        JOptionPane.showMessageDialog(null, "item doesn't exist");
-//                    }
-                        while (rs.next()) {
-
-                            row[0] = rs.getString("sname");
-                            row[1] = rs.getDouble("price");
-                            receiptDetails += "\n " + rs.getInt("stockID") + "\t" + row[0].toString() + "\t " + row[1].toString();
-                            model.addRow(row);
-
-
-                        totalPrice = totalPrice + (double) model.getValueAt(table.getRowCount() - 1, 1);
-                        System.out.println("price: " + totalPrice);
-                        totalLabel.setText("total: €" + totalPrice);
-                    }
 				} catch(SQLException sqle) {
 					JOptionPane.showMessageDialog(null, "ERROR");
 				}
