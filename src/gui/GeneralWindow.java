@@ -20,6 +20,7 @@ public class GeneralWindow extends JFrame {
 	private JFrame frame;
 	public static double totalPrice = 0;
 	public static JTextField productCodeField;
+	public static JTable table = new JTable();
 	public static DefaultTableModel model;
 	public static int transactionID = 0;
 	public static JLabel currentEmployee;
@@ -133,7 +134,7 @@ public class GeneralWindow extends JFrame {
 		btnEnter.setVisible(false);
 		frame.getRootPane().setDefaultButton(btnEnter);
 
-		JTable table = new JTable();
+
 		Object[] identifiers = {"Item", "Price"};
 		table.setBounds(10, 30, 601, 453);
 		DefaultTableModel model = new DefaultTableModel();
@@ -202,40 +203,48 @@ public class GeneralWindow extends JFrame {
 		btnEnter.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				try {
 					Connection connection = DBConnection.getConnection();
 					Statement statement = connection.createStatement();
-					ResultSet rs = statement.executeQuery("select * from stock where stockID = " + Integer.valueOf(productCodeField.getText()) +";");
-
-					PreparedStatement ps = connection.prepareStatement("update stock set quantity = quantity - 1 where stockID = ?;");
-					ps.setInt(1, Integer.valueOf(productCodeField.getText()));
-					ps.executeUpdate();
-
-					productCodeField.requestFocusInWindow();
-					Object[] row = new Object[2];
-
-					if(rs.next()) {
-
-                        row[0] = rs.getString("sname");
-                        row[1] = rs.getDouble("price");
-						receiptDetails += "\n " + rs.getInt("stockID") + "\t" + row[0].toString() + "\t " + row[1].toString();
-                        model.addRow(row);
+					ResultSet rs = statement.executeQuery("select * from stock where stockID = " + Integer.valueOf(productCodeField.getText()) + ";");
 
 
-						totalPrice = totalPrice + (double) model.getValueAt(table.getRowCount() - 1, 1);
-                        DecimalFormat df = new DecimalFormat("#.##");
-                        totalPrice = Double.valueOf(df.format(totalPrice));
-						System.out.println("price: " + totalPrice);
-						totalLabel.setText("total: " + totalPrice);
+						PreparedStatement ps = connection.prepareStatement("update stock set quantity = quantity - 1 where stockID = ?;");
+						ps.setInt(1, Integer.valueOf(productCodeField.getText()));
+						ps.executeUpdate();
+
+						productCodeField.requestFocusInWindow();
+						Object[] row = new Object[2];
+
+						if (rs.next()) {
+							int stocklevel = rs.getInt("quantity");
+							if(stocklevel <= 0) {
+								JOptionPane.showMessageDialog(null,"item out of stock, can be ordered");
+							}
+							else {
+								row[0] = rs.getString("sname");
+								row[1] = rs.getDouble("price");
+								receiptDetails += "\n " + rs.getInt("stockID") + "\t" + row[0].toString() + "\t " + row[1].toString();
+								model.addRow(row);
+
+
+								totalPrice = totalPrice + (double) model.getValueAt(table.getRowCount() - 1, 1);
+								DecimalFormat df = new DecimalFormat("#.##");
+								totalPrice = Double.valueOf(df.format(totalPrice));
+								System.out.println("price: " + totalPrice);
+								totalLabel.setText("total: " + totalPrice);
+							}
+						} else
+							JOptionPane.showMessageDialog(null, "item doesn't exist");
+
+					} catch(SQLException sqle){
+						JOptionPane.showMessageDialog(null, "ERROR");
 					}
-					else
-						JOptionPane.showMessageDialog(null, "item doesn't exist");
-				} catch(SQLException sqle) {
-					JOptionPane.showMessageDialog(null, "ERROR");
+
+					productCodeField.setText("");
+					productCodeField.requestFocusInWindow();
 				}
-				productCodeField.setText("");
-				productCodeField.requestFocusInWindow();
-			}
 		});
 
 		btnDelete.addActionListener(new ActionListener() {
@@ -392,18 +401,29 @@ public class GeneralWindow extends JFrame {
 		}
 		Connection connection = DBConnection.getConnection();
 		try {
-			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("select * from stock where quantity < 10;");
+			if(cal.get(Calendar.HOUR_OF_DAY) == 18 && cal.get(Calendar.MINUTE) == 30 && cal.get(Calendar.SECOND) == 0) {
+				Statement statement = connection.createStatement();
+				ResultSet resultSet = statement.executeQuery("select * from stock where quantity < 10;");
 
-			while(resultSet.next()) {
-				Statement statement1 = connection.createStatement();
-				statement1.executeUpdate("update stock set quantity = quantity + 10 where quantity <= 0;");
-				OrderDetails += "\n " + resultSet.getString("sname") + " updated to \t" + (resultSet.getInt("quantity") + 10);
-
+				while (resultSet.next()) {
+					Statement statement1 = connection.createStatement();
+					statement1.executeUpdate("update stock set quantity = quantity + 10 where quantity <= 0;");
+					OrderDetails += "\n " + resultSet.getString("sname") + " updated to \t" + (resultSet.getInt("quantity") + 10);
+				}
 			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+
+
 	}
+
+	static void reset() {
+		model = new DefaultTableModel();
+		model.setRowCount(0);
+	}
+
+
+
 }

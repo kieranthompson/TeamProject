@@ -14,6 +14,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
 import java.awt.Font;
 
 public class CustomersWindow extends JFrame {
@@ -24,6 +25,7 @@ public class CustomersWindow extends JFrame {
 	private JTextField addressField1;
 	private JTextField addressField2;
 	private JTextField emailField;
+	static JButton btnEnter = new JButton("Enter");
 
 	/**
 	 * Launch the application.
@@ -102,7 +104,7 @@ public class CustomersWindow extends JFrame {
 		this.getContentPane().add(emailField);
 		emailField.setColumns(10);
 		
-		JButton btnEnter = new JButton("Enter");
+
 		btnEnter.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		btnEnter.setBounds(158, 390, 99, 38);
 		this.getContentPane().add(btnEnter);
@@ -147,14 +149,15 @@ public class CustomersWindow extends JFrame {
 					ps.setString(3, customer.getAddress());
 					ps.setString(4, customer.getEmail());
 					ps.executeUpdate();
-
-					GeneralWindow.model.setRowCount(0);
-					GeneralWindow.totalLabel.setText("Total: ?");
+					GeneralWindow.totalLabel.setText("Total: ");
+					double total = GeneralWindow.totalPrice;
 					GeneralWindow.totalPrice = 0;
+
 
 					Email email = new Email();
 					try {
-						email.emailReceipt("electroworld.letterkenny@gmail.com", "imawesome123", customer.getEmail(), "ElectroWorld Receipt", GeneralWindow.receiptDetails);
+						email.emailReceipt("electroworld.letterkenny@gmail.com", "imawesome123", customer.getEmail(), "ElectroWorld Receipt", customer.getFname() + " " + customer.getSname() + "\nThank you for shopping at Electro-World!" + "\nReceipt No: " + GeneralWindow.transactionID + GeneralWindow.receiptDetails + "\nTotal: €" + total);
+						GeneralWindow.reset();
 					} catch (MessagingException e1) {
 						e1.printStackTrace();
 					}
