@@ -10,7 +10,7 @@ public class EmailTest {
 
         Email email = new Email();
         try {
-            email.emailReceipt("krizzle2home@gmail.com", "Inutra.41", "david94k@gmail.com", "Letterkenny Electrical", "HI DAVID!");
+            email.emailReceipt("krizzle2home@gmail.com", "*******", "david94k@gmail.com", "Letterkenny Electrical", "HI DAVID!");
         } catch(MessagingException mse) {
             mse.printStackTrace();
         }

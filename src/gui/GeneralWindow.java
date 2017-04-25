@@ -190,8 +190,8 @@ public class GeneralWindow extends JFrame {
 		});
 
 		btnStaff.addActionListener(e -> {
-            staff window = new staff();
-            window.setVisible(true);
+            ListStaff window = new ListStaff();
+            window.initialize();
         });
 		
 		btnReturns.addActionListener(e -> {
@@ -282,7 +282,7 @@ public class GeneralWindow extends JFrame {
                             while(rs.next()) {
                                 transactionID = rs.getInt("transactionID") + 1;
 								try {
-									File newTextFile = new File("C:\\Users\\Kieran\\Desktop\\TeamProject\\receipts/receipt" + transactionID + ".txt");
+									File newTextFile = new File("/home/kieran/Desktop/receipts/receipt" + transactionID + ".txt");
 									FileWriter fw = new FileWriter(newTextFile);
 									fw.write(receiptDetails);
 									fw.close();
@@ -383,7 +383,7 @@ public class GeneralWindow extends JFrame {
 		int month = cal.get(Calendar.MONTH);
 		int year = cal.get(Calendar.YEAR);
 		try {
-			File newFile = new File("C:\\Users\\Kieran\\Desktop\\TeamProject\\OrderReceipts/OrderReceipt" + day + "_" + month + "_" + year + ".txt");
+			File newFile = new File("/home/kieran/Desktop/DailyOrderReceipts/orderreceipt" + day + "_" + month + "_" + year + ".txt");
 			FileWriter fw = new FileWriter(newFile);
 			fw.write("Order Receipt For " + day + "/" + month + "/" + year + "\n" + OrderDetails);
 			fw.close();

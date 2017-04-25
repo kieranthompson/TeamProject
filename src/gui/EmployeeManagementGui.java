@@ -82,7 +82,7 @@ public class EmployeeManagementGui extends JFrame {
 
         EmployeeManagementGui frame = new EmployeeManagementGui();
         frame.pack();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }

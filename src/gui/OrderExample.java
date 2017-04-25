@@ -43,7 +43,7 @@ public class OrderExample {
 		JTable table= new JTable();
 		table.setBounds(428, 445, 396, -328);
 
-		Object[] columns = {"Product Id", "Product Name", "Description", "Price"};
+		Object[] columns = {"Product Id", "Product Name", "Description", "Price", "Quantity"};
 		DefaultTableModel model = new DefaultTableModel() {
 			public boolean isCellEditable(int row, int column) {
 				return false;
@@ -110,7 +110,7 @@ public class OrderExample {
 		lblDescription.setBounds(20, 251, 116, 14);
 		frame.getContentPane().add(lblDescription);
 
-		Object[] row = new Object[4];
+		Object[] row = new Object[5];
 
 		btnAdd.addActionListener(new ActionListener(){
 
@@ -163,7 +163,6 @@ public class OrderExample {
 
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
 				int i = table.getSelectedRow();
 				prodId.setText(model.getValueAt(i, 0). toString());
 				prodName.setText(model.getValueAt(i, 1).toString());
@@ -198,6 +197,7 @@ public class OrderExample {
 						row[1] = rs.getString("sname");
 						row[2] = rs.getString("description");
 						row[3] = rs.getDouble("price");
+						row[4] = rs.getInt("quantity");
 
 						model.addRow(row);
 					}
@@ -210,7 +210,7 @@ public class OrderExample {
 		});
 
 
-		btnExit.addActionListener(new ActionListener(){
+		btnExit.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e){
